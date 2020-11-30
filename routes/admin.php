@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->namespace('Admin')->middleware(['requestLog'])->group(function () {
     Route::post('/login', 'LoginController@login');                             # 登录
+    Route::get('/qiniu/token','LoginController@getQiniuToken');                 # 获取七牛token
     Route::delete('/login', 'IndexController@loginOut');                        # 退出
     Route::put('/change/password', 'IndexController@changePassword');           # 修改密码
     Route::get('/permission', 'IndexController@getPermission');                 # 获取权限
     Route::post('/send/code', 'IndexController@sendCode');                      # 发送短信验证码
-    Route::post('/upload/file/image', 'IndexController@uploadFileImage');       # form表单上传图片
+    Route::post('/upload/file', 'IndexController@uploadFile');                  # form表单上传文件
     Route::post('/upload/base64/image', 'IndexController@uploadBase64Image');   # base64字符串上传图片
     Route::post('/send/notify','IndexController@batchSendNotify');              # 批量发送短信通知(使用队列)
     Route::post('/create/seckill','IndexController@createSeckill');             # 创建秒杀

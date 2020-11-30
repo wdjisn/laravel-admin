@@ -51,11 +51,11 @@ class MongoDB
      */
     private function initConfig()
     {
-        $this->host = env('MongoDB_HOST');
-        $this->port = env('MongoDB_PORT');
-        $this->username = env('MongoDB_USERNAME');
-        $this->password = env('MongoDB_PASSWORD');
-        $this->database = env('MongoDB_DATABASE');
+        $this->host = config('style.mongo.host');
+        $this->port = config('style.mongo.port');
+        $this->username = config('style.mongo.username');
+        $this->password = config('style.mongo.password');
+        $this->database = config('style.mongo.database');
     }
 
     /**

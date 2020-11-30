@@ -22,9 +22,9 @@ class Acloud
     private static function getConfig()
     {
         # 使用RAM账号,需要授权
-        $key    = env('SMS_KEY');
-        $secret = env('SMS_SECRET');
-        $sign   = env('SMS_SIGN');
+        $key    = config('style.sms.key');
+        $secret = config('style.sms.secret');
+        $sign   = config('style.sms.sign');
 
         return compact('key','secret','sign');
     }

@@ -43,7 +43,10 @@ class BaseController extends Controller
         if (!$arr) {
             errorReturn();
         }
-        if ($arr['appname'] != env('APP_NAME') || abs($arr['timestamp'] - time()) > 60) {
+        if ($arr['appname'] != config('style.app.name')) {
+            errorReturn();
+        }
+        if ((time() - $arr['timestamp']) > 60) {
             errorReturn();
         }
         $userToken = $arr['token'];

@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Extend\Qniu;
 use App\Extend\Token;
 use App\Extend\Predis;
 use App\Rules\AdminRule;
@@ -56,12 +57,23 @@ class LoginController extends Controller
 
         $data['token'] = $token;
         $data['timestamp'] = time();
-        $data['appname'] = env('APP_NAME');
+        $data['appname'] = config('style.app.name');
         $str = base64_encode(json_encode($data,JSON_UNESCAPED_UNICODE));
 
         # 统计未处理bug数量
         $errorCount = LogService::getErrorCount(['status' => 0]);
 
         successReturn(['username' => $info['username'],'token' => $token,'error_count' => $errorCount]);
+    }
+
+    /**
+     * 获取七牛云token
+     */
+    public function getQiniuToken()
+    {
+        $token = Qniu::getToken();
+
+        $data = ['uptoken' => $token];
+        return json_encode($data);
     }
 }

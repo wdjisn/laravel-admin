@@ -1,18 +1,21 @@
 ## 项目简介
-LaravelAdmin是基于PHP开发的基础管理后台系统，做到开箱即用，为新项目开发省去了基础功能开发的步骤；此系统采用前后端分离模式，后端使用Laravel，前端使用vue；主要包含：登录、注销、可视化数据大屏、管理员、角色管理、菜单管理、权限管理、错误日志、登录日志、访问日志等功能。后端主要使用Artisan命令行、Jobs消息队列、 Rules验证规则、Restful API、Composer扩展包、Redis秒杀、Extend自定义扩展类：钉钉告警推送、MongoDB、阿里云OSS、php-jwt TOKEN、Phpoffice等技术。
+LaravelAdmin是基于PHP开发的基础管理后台系统，做到开箱即用，为新项目开发省去了基础功能开发的步骤；此系统采用前后端分离模式，后端使用Laravel，前端使用vue；主要包含：登录、注销、可视化数据大屏、管理员、角色管理、菜单管理、权限管理、错误日志、登录日志、访问日志等功能。后端主要使用Artisan命令行、Jobs消息队列、 Rules验证规则、Restful API、Composer扩展包、Redis秒杀、Extend自定义扩展类：微信授权、钉钉告警推送、MongoDB、阿里云OSS、七牛云存储、php-jwt TOKEN、Phpoffice等技术。
 
 ## 项目截图
-##### 登录界面
-![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201022/login.png)
 ##### 数据大屏
 ![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201022/dataV.png)
+##### 菜单管理
+![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201130/menu.png)
 ##### 权限管理
-![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201022/menu.png)
+![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201130/permission.png)
+##### 错误日志
+![](https://sobj.oss-cn-beijing.aliyuncs.com/image/20201130/error.png)
 
 
 ## 后端安装步骤
 - git clone https://github.com/wdjisn/laravel-admin.git
-- 复制 .env.example 配置文件为 .env 并修改为自己的配置
+- 修改 config/style.php 文件中配置项
+- 修改 config/database.php 文件中connections->mysql、redis->default配置项
 - composer update
 - 数据表初始化 php artisan createTable
 - 管理员初始化 php artisan adminInitialize admin（账号） --password=123456（密码）
@@ -35,6 +38,9 @@ LaravelAdmin是基于PHP开发的基础管理后台系统，做到开箱即用�
 │   ├── Model 模型层
 │   ├── Rules 验证规则
 │   ├── Service 服务层
+├── config
+│   ├── style.php 自定义配置文件
+│   ├── database.php 数据库配置文件
 ├── docs 自定义文档
 ├── routes
 │   ├── admin.php 管理后台路由

@@ -23,7 +23,8 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "phpoffice/phpspreadsheet": "^1.14",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "qiniu/php-sdk": "^7.3"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

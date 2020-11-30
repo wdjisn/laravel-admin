@@ -21,11 +21,11 @@ class Oss
     private static function getConfig()
     {
         # 使用RAM账号,需要授权
-        $bucket   = env('OSS_BUCKET');
-        $key      = env('OSS_KEY');
-        $secret   = env('OSS_SECRET');
-        $endpoint = env('OSS_ENDPOINT');
-        $gateway  = env('OSS_GATEWAY');
+        $bucket   = config('style.oss.bucket');
+        $key      = config('style.oss.key');
+        $secret   = config('style.oss.secret');
+        $endpoint = config('style.oss.endpoint');
+        $gateway  = config('style.oss.gateway');
 
         return compact('bucket','key','secret','endpoint','gateway');
     }

@@ -11,17 +11,17 @@ namespace App\Extend;
 class Dding
 {
 
-    # 此推送方法需要配置ip白名单
-    protected static $webhook = 'https://oapi.dingtalk.com/robot/send?access_token=******';
-
     /**
      * Bug告警
      * @param $param
      */
     public static function bugWarning($param)
     {
+        # 此推送方法需要配置ip白名单
+        $webhook = 'https://oapi.dingtalk.com/robot/send?access_token='.config('style.ding.token');
+
         $environment = '测试环境';
-        if (env('APP_ENVIRONMENT')) {
+        if (config('style.app.environment')) {
             $environment = '正式环境';
         }
 
@@ -36,7 +36,7 @@ class Dding
 
         $dataArr = ['msgtype' => 'text', 'text' => ['content' => $content]];
         $dataStr = json_encode($dataArr);
-        self::request_by_curl(self::$webhook, $dataStr);
+        self::request_by_curl($webhook, $dataStr);
     }
 
     /**

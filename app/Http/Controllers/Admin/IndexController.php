@@ -68,13 +68,13 @@ class IndexController extends BaseController
     }
 
     /**
-     * 上传图片
+     * 上传文件
      */
-    public function uploadFileImage()
+    public function uploadFile()
     {
         $file = $this->requestFile['file'];
 
-        $result = Upload::fileImage($file);
+        $result = Upload::file($file);
         if (!$result['status']) {
             errorReturn($result['msg']);
         }

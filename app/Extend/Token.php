@@ -29,7 +29,7 @@ class Token
             // 'exp'  => $time ,                   // 过期时间
             'data' => $param                       // 自定义信息，不要定义敏感信息
         ];
-        $secret = env('TOKEN_SECRET');
+        $secret = config('style.app.jwt_secret');
         $token  = JWT::encode($data,$secret);
 
         return $token;
@@ -43,7 +43,7 @@ class Token
     public static function checkToken($token)
     {
         try {
-            $secret = env('TOKEN_SECRET');
+            $secret = config('style.app.jwt_secret');
             $data   = JWT::decode($token, $secret, array('HS256'));
 
             return $data;

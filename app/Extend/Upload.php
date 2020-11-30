@@ -15,44 +15,71 @@ class Upload
 
     protected static $imageSize = 2;
     protected static $imagePostfix = ["png", "jpg", "jpeg", "gif"];
+    protected static $videoSize = 20;
+    protected static $videoPostfix = ["mp4", "avi", "3gp", "wmv", "mov"];
 
     /**
-     * form表单上传图片
+     * form表单上传文件
      * @param $file
      * @return mixed
+     * @throws \Exception
      */
-    public static function fileImage($file)
+    public static function file($file)
     {
         # 验证后缀
         $postfix = strtolower($file->getClientOriginalExtension());
-        if ($postfix && !in_array($postfix, self::$imagePostfix)) {
-            $str = implode(' | ',self::$imagePostfix);
-            return errorMsg('只能上传 '. $str .' 格式的图片');
+        if ($postfix && !in_array($postfix, self::$imagePostfix) && !in_array($postfix, self::$videoPostfix)) {
+            // $str = implode(' | ',self::$imagePostfix);
+            return errorMsg('不支持此格式文件上传');
         }
 
         # 验证大小
         $size = $file->getSize() / (1024 * 1024);
-        if ($size > self::$imageSize) {
-            return errorMsg('图片大小不能大于' . self::$imageSize . 'M');
+        if (in_array($postfix, self::$imagePostfix)) {
+            $type = 'image';
+            if ($size > self::$imageSize) {
+                return errorMsg('图片大小不能大于' . self::$imageSize . 'M');
+            }
+        }
+        if (in_array($postfix, self::$videoPostfix)) {
+            $type = 'video';
+            if ($size > self::$videoSize) {
+                return errorMsg('视频大小不能大于' . self::$imageSize . 'M');
+            }
         }
 
         # 要存储的文件名
         $name = date('His') . rand(1000, 9999) . '.' . $postfix;
 
-        # 存储至阿里云OSS
+
+        # 存储到七牛云
         $realPath = $file->getRealPath();
-        $url = 'images/' . date('Ymd') . '/' . $name;
+        $url = $type . '/' . date('Ymd') . '/' . $name;
+        $result = Qniu::uploadFile($realPath,$url);
+        if ($result['status']) {
+            $data = ['url' => $result['data']['url'], 'full_url' => config('style.oss.gateway') . $result['data']['url']];
+            return successMsg($data);
+        }
+        return errorMsg($result['msg']);
+
+
+        /*# 存储至阿里云OSS
+        $realPath = $file->getRealPath();
+        $url = $type . '/' . date('Ymd') . '/' . $name;
         $result = Oss::fileUpload($realPath,$url);
         if (!$result['status']) {
             return errorMsg($result['msg']);
         }
-        return successMsg($result['data']);
+        return successMsg($result['data']);*/
 
         /*# 存储至storage文件夹
-        $path   = 'upload/images/' . date('Ymd') . '/';
+        $date   = date('Ymd');
+        $path   = 'upload/' . $type . '/' . $date . '/';
         $result = Storage::putFileAs($path, $file, $name);
         if ($result) {
-            return successMsg(['url' => $path . $name]);
+            $url  = '/' . $type . '/' .$date . '/' . $name;
+            $data = ['url' => $url, 'full_url' => 'http://' . $_SERVER["HTTP_HOST"] . $url];
+            return successMsg($data);
         }
         return errorMsg();*/
     }
@@ -80,25 +107,42 @@ class Upload
                 return errorMsg('图片大小不能大于' . self::$imageSize . 'M');
             }
 
-            # 存储至阿里云OSS
+
+            # 存储到七牛云
             $name   = date('His') . rand(1000, 9999) . '.' . $postfix;
-            $url    = 'images/' . date('Ymd') . '/' . $name;
+            $url    = 'image/' . date('Ymd') . '/' . $name;
+            $image  = base64_decode(str_replace($match[1], '', $content));
+            $result = Qniu::uploadContent($image,$url);
+            if ($result['status']) {
+                $data = ['url' => $result['data']['url'], 'full_url' => config('style.oss.storage') . $result['data']['url']];
+                return successMsg($data);
+            }
+            return errorMsg($result['msg']);
+
+
+            /*# 存储至阿里云OSS
+            $name   = date('His') . rand(1000, 9999) . '.' . $postfix;
+            $url    = 'image/' . date('Ymd') . '/' . $name;
             $image  = base64_decode(str_replace($match[1], '', $content));
             $result = Oss::contentUpload($image,$url);
             if (!$result['status']) {
                 return errorMsg($result['msg']);
             }
-            return successMsg($result['data']);
+            return successMsg($result['data']);*/
+
 
             /*# 存储至storage文件夹
             $name  = date('His') . rand(1000, 9999) . '.' . $postfix;
-            $path  = 'images/' . date('Ymd') . '/' . $name;
+            $date  = date('Ymd');
+            $path  = 'image/' . $date . '/' . $name;
             $image = base64_decode(str_replace($match[1], '', $content));
             # disk设置参数upload，需要在config/filesystems.php文件中增加upload驱动
             $disk   = 'upload';
             $result = Storage::disk($disk)->put($path,$image);
             if ($result) {
-                return successMsg(['url' => $disk . '/' . $path]);
+                $url  = '/image/' . $date . '/' . $name;
+                $data = ['url' => $url, 'full_url' => 'http://' . $_SERVER["HTTP_HOST"] . $url];
+                return successMsg($data);
             }
             return errorMsg();*/
         } else {
