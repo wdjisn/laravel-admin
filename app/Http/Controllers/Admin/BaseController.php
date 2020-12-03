@@ -43,10 +43,11 @@ class BaseController extends Controller
         if (!$arr) {
             errorReturn();
         }
-        if ($arr['appname'] != config('style.app.name')) {
+        if ((time() - $arr['timestamp']) > 60) {
             errorReturn();
         }
-        if ((time() - $arr['timestamp']) > 60) {
+        $sign = md5('appname='.config('style.app.name').'&appsecret='.config('style.app.secret').'&timestamp='.$arr['timestamp']);
+        if ($arr['sign'] != $sign) {
             errorReturn();
         }
         $userToken = $arr['token'];

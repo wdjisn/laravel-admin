@@ -4,6 +4,7 @@ return [
     'app' => [
         'name'        => 'LaravelAdmin',
         'environment' => false,
+        'secret'      => 'Sl7qkF2DKglAdlk4397qdKCUf3',
         'jwt_secret'  => 'X0p7tv5TFL2SyADG3bPW9defThiI8KQR'
     ],
     # MongoDB
