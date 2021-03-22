@@ -18,9 +18,24 @@ use App\Service\AdminService;
 use App\Service\SmsService;
 use App\Service\RoleService;
 use App\Service\SeckillService;
+use App\Extend\ServerMonitor;
 
 class IndexController extends BaseController
 {
+
+    /**
+     * 获取服务器参数
+     */
+    public function getServerMonitor()
+    {
+        $systemIns = new ServerMonitor();
+
+        $data['runTime'] = $systemIns->getUpTime();              # 获取运行时间
+        $data['memory']  = $systemIns->getMem(true);    # 获取内存信息
+        $data['cpu']     = $systemIns->getCPU();                # 获取CPU使用率
+
+        successReturn($data);
+    }
 
     /**
      * 退出
