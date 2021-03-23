@@ -15,6 +15,7 @@ Route::get('/', function () {
     return null;
 });
 
+Route::get("/ddoc","Controller@getDdoc");                                    // 获取数据字典
 Route::get("/image/{file_path}/{file_name}","Controller@imageBrowse");       // storage文件夹下图片预览
 Route::get("/video/{file_path}/{file_name}","Controller@videoBrowse");       // storage文件夹下视频预览
 

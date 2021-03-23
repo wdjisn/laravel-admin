@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Extend\Ddoc;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -31,5 +32,13 @@ class Controller extends BaseController
     function videoBrowse($file_path,$file_name)
     {
         return response()->file(storage_path().'/app/upload/video/'.$file_path.'/'.$file_name);
+    }
+
+    /**
+     * 获取数据字典
+     */
+    function getDdoc()
+    {
+        Ddoc::getDdoc();
     }
 }
