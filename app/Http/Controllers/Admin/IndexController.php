@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Extend\QnPili;
 use App\Jobs\Snotify;
 use App\Extend\Predis;
 use App\Extend\Upload;
@@ -225,5 +226,39 @@ class IndexController extends BaseController
         $result = $redis->hgetall($key);
 
         v($result);
+    }
+
+    /**
+     * 创建直播流
+     */
+    public function createLive()
+    {
+        $userId = $this->userId;
+        $result = QnPili::createStream($userId);
+
+        successReturn($result['data']);
+    }
+
+    /**
+     * 获取直播列表
+     */
+    public function getLiveList()
+    {
+        $list   = Array();
+        $result = QnPili::getLiveList();
+
+        if ($result['data']['keys']) {
+            foreach ($result['data']['keys'] as $key=>$val) {
+                $valArr = explode('-', $val);
+                if ($valArr && $valArr[2]) {
+                    $tmp = Array();
+                    $tmp['live_name'] = $key;
+                    $tmp['play_url']  = QnPili::getPlayUrl($valArr[2]);;
+                    $list[$key] = $tmp;
+                }
+            }
+        }
+
+        successReturn($list);
     }
 }

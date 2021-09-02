@@ -24,7 +24,8 @@
         "laravel/tinker": "^1.0",
         "phpoffice/phpspreadsheet": "^1.14",
         "predis/predis": "^1.1",
-        "qiniu/php-sdk": "^7.3"
+        "qiniu/php-sdk": "^7.3",
+        "pili-engineering/pili-sdk-php.v2": "dev-master"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

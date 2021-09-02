@@ -21,6 +21,8 @@ Route::prefix('admin')->namespace('Admin')->middleware(['requestLog'])->group(fu
     Route::post('/create/seckill','IndexController@createSeckill');             # 创建秒杀
     Route::get('/user/seckill','IndexController@userSeckill');                  # 用户秒杀
     Route::get('/seckill/result','IndexController@seckillResult');              # 显示秒杀结果
+    Route::post('/create/live','IndexController@createLive');                   # 创建直播流
+    Route::get('/lives','IndexController@getLiveList');                         # 获取直播列表
 
     Route::get('/admins', 'AdminController@getAdminList');                      # 获取管理员列表
     Route::get('/admin', 'AdminController@getAdminInfo');                       # 获取管理员详情

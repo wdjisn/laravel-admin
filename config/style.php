@@ -28,6 +28,17 @@ return [
         'secret'  => '',
         'storage' => ''
     ],
+    # 七牛云直播
+    'qnPili' => [
+        'ak'        => '',
+        'sk'        => '',
+        'hubName'   => '',
+        'streamKey' => '',
+        'rtmpPush'  => '',
+        'rtmpLive'  => '',
+        'hlsLive'   => '',
+        'hdlLive'   => ''
+    ],
     # 阿里云OSS
     'oss' => [
         'key'      => '',
