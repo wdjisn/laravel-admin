@@ -14,10 +14,10 @@ LaravelAdmin是基于PHP开发的基础管理后台系统，做到开箱即用�
 
 ## 后端安装步骤
 - git clone https://github.com/wdjisn/laravel-admin.git
+- composer update
 - 复制 .env.example 为 .env
 - 修改 .env 文件中mysql、redis的配置
 - 执行 php artisan key:generate 命令，生成 APP_KEY
-- composer update
 - 数据表初始化 php artisan createTable
 - 管理员初始化 php artisan adminInitialize admin（账号） --password=123456（密码）
 
