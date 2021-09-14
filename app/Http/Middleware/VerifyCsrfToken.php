@@ -21,5 +21,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         // 跳过VerifyCsrfToken验证
         'admin/*',
+        'api/*',
     ];
 }

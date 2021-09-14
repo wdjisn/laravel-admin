@@ -19,5 +19,6 @@ Route::get("/ddoc","Controller@getDdoc");                                    // 
 Route::get("/image/{file_path}/{file_name}","Controller@imageBrowse");       // storage文件夹下图片预览
 Route::get("/video/{file_path}/{file_name}","Controller@videoBrowse");       // storage文件夹下视频预览
 
-# 引入admin.php路由
+# 引入路由文件
 include __DIR__ . '/admin.php';
+include __DIR__ . '/api.php';
