@@ -56,5 +56,11 @@ LaravelAdmin是基于PHP开发的基础管理后台系统，做到开箱即用�
 - https://github.com/wdjisn/vue-admin.git
 
 
+## 在线体验
+- 网址：http://laravel.baobaonames.cn/#/login
+- 账号：style
+- 密码：123456
+
+
 ## 疑问解答
 - 微信：wdjisn
