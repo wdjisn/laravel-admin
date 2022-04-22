@@ -21,7 +21,7 @@ function v($msg)
  * @param array $data
  * @param string $msg
  */
-function successReturn($data = Array(), $msg = '请求成功')
+function jSuccess($data = Array(), $msg = '请求成功')
 {
     $result['code'] = 200;
     $result['msg']  = $msg;
@@ -35,7 +35,7 @@ function successReturn($data = Array(), $msg = '请求成功')
  * @param int $code
  * @param array $data
  */
-function errorReturn($msg = '请求失败', $code = 1000, $data = Array())
+function jError($msg = '请求失败', $code = 500, $data = Array())
 {
     $result['code'] = $code;
     $result['msg']  = $msg;
@@ -49,7 +49,7 @@ function errorReturn($msg = '请求失败', $code = 1000, $data = Array())
  * @param string $msg
  * @return mixed
  */
-function successMsg($data = Array(),$msg = '请求成功')
+function success($data = Array(), $msg = '请求成功')
 {
     $result['msg'] = $msg;
     $result['data'] = $data;
@@ -62,7 +62,7 @@ function successMsg($data = Array(),$msg = '请求成功')
  * @param array $data
  * @return mixed
  */
-function errorMsg($msg = '参数错误',$data = Array())
+function error($msg = '参数错误', $data = Array())
 {
     $result['msg'] = $msg;
     $result['data'] = $data;
@@ -187,4 +187,14 @@ function getLine($file, $line, $length = 40960)
         fclose($handle);
     }
     return $returnTxt;
+}
+
+/**
+ * 生成唯一订单号：ymdHis + 微秒 + 4位随机数
+ * @return string
+ */
+function createOrderSn()
+{
+    list($micro, $seconds) = explode(" ", microtime());
+    return date('ymdHis', $seconds) . $micro*1000*1000 . rand(1000, 9999);
 }

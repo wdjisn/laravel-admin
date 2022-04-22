@@ -64,15 +64,15 @@ class Acloud
                 ->request();
             $res = $result->toArray();
             if ($res['Code'] != "OK") {
-                return errorMsg($result['Message']);
+                return error($result['Message']);
             }
-            return successMsg();
+            return success();
         } catch (ClientException $e) {
-            return errorMsg($e->getErrorMessage());
+            return error($e->getErrorMessage());
         } catch (ServerException $e) {
-            return errorMsg($e->getErrorMessage());
+            return error($e->getErrorMessage());
         } catch (\Exception $e) {
-            return errorMsg($e->getMessage());
+            return error($e->getMessage());
         }
     }
 }

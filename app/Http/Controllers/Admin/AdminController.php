@@ -28,7 +28,7 @@ class AdminController extends BaseController
             $val['status'] = $val['status'] == 1 ? true : false;
         }
 
-        successReturn($data);
+        jSuccess($data);
     }
 
     /**
@@ -47,7 +47,7 @@ class AdminController extends BaseController
             $info['username'] = $data['username'];
         }
 
-        successReturn($info);
+        jSuccess($info);
     }
 
     /**
@@ -67,14 +67,14 @@ class AdminController extends BaseController
         $post['role_id'] = $roleId;
         $post['confirm_password'] = $confirmPassword;
         if (!$adminRule->scene('add')->check($post)) {
-            errorReturn($adminRule->getError());
+            jError($adminRule->getError());
         }
 
         $result = AdminService::addAdmin($username,$password,$roleId,$status);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -89,9 +89,9 @@ class AdminController extends BaseController
 
         $result = AdminService::editAdmin($id,$roleId,$status,$password);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -104,9 +104,9 @@ class AdminController extends BaseController
 
         $result = Admin::editAdmin($id,$data);
         if ($result) {
-            successReturn();
+            jSuccess();
         }
-        errorReturn($result['msg']);
+        jError($result['msg']);
     }
 
     /**
@@ -118,13 +118,13 @@ class AdminController extends BaseController
         $id = $this->requestArr['id'];
 
         if ($id == $this->userId) {
-            errorReturn('无法自我删除');
+            jError('无法自我删除');
         }
 
         $result = AdminService::delAdminById($id);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 }

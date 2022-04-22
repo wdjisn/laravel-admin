@@ -54,9 +54,9 @@ class Qniu
         list($ret, $err) = $uploadMgr->putFile($token, $path, $file);
 
         if ($err !== null) {
-            return errorMsg('上传失败，请稍后重试');
+            return error('上传失败，请稍后重试');
         } else {
-            return successMsg(['url' => '/'. $ret['key']]);
+            return success(['url' => '/'. $ret['key']]);
         }
     }
 
@@ -78,9 +78,9 @@ class Qniu
         list($ret, $err) = $uploadMgr->put($token, $path, $content);
 
         if ($err !== null) {
-            return errorMsg('上传失败，请稍后重试');
+            return error('上传失败，请稍后重试');
         } else {
-            return successMsg(['url' => '/'. $ret['key']]);
+            return success(['url' => '/'. $ret['key']]);
         }
     }
 }

@@ -25,7 +25,7 @@ class SmsService
     {
         # 验证参数
         if (!preg_match('/^1[345789][0-9]{9}$/',$mobile)) {
-            return errorMsg('手机号格式不正确');
+            return error('手机号格式不正确');
         }
 
         # 发送短信风控
@@ -36,14 +36,14 @@ class SmsService
         if ($count > 9) {
             # IP拉黑2小时
             $redis->expire($ipKey,2*60*60);
-            return errorMsg('发送过于频繁');
+            return error('发送过于频繁');
         }
 
         # 同一手机号，60秒（前端展示的倒计时）内只能发送一次
         $mobileKey = 'SMS:' . $mobile;
         $value = $redis->get($mobileKey);
         if ($value) {
-            return errorMsg('发送过于频繁，请稍后重试');
+            return error('发送过于频繁，请稍后重试');
         }
 
         # 验证码
@@ -53,7 +53,7 @@ class SmsService
         # 发送
         $result = Acloud::sendSms($mobile,'SMS_169897105',$data);
         if (!$result['status']) {
-            return errorMsg($result['msg']);
+            return error($result['msg']);
         }
         # 发送成功，记录数据
         $redis->incr($ipKey);
@@ -62,7 +62,7 @@ class SmsService
             $redis->expire($ipKey,30 *60);
         }
         $redis->set($mobileKey,$code,60);
-        return successMsg();
+        return success();
     }
 
     /**
@@ -77,8 +77,8 @@ class SmsService
         $redis     = new Predis();
         $value     = $redis->get($mobileKey);
         if (!$value || $value != $code) {
-            return errorMsg('验证码错误');
+            return error('验证码错误');
         }
-        return successMsg();
+        return success();
     }
 }

@@ -27,7 +27,7 @@ class RoleController extends BaseController
             $val['status'] = $val['status'] == 1 ? true : false;
         }
 
-        successReturn($data);
+        jSuccess($data);
     }
 
     /**
@@ -39,7 +39,7 @@ class RoleController extends BaseController
 
         $info = RoleService::getInfoById($id);
 
-        successReturn($info);
+        jSuccess($info);
     }
 
     /**
@@ -53,9 +53,9 @@ class RoleController extends BaseController
 
         $result = RoleService::addRole($name,$menuIds,$this->userId,$status);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -70,9 +70,9 @@ class RoleController extends BaseController
 
         $result = RoleService::editRole($id,$name,$menuIds,$status);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -85,9 +85,9 @@ class RoleController extends BaseController
 
         $result = Role::editRole($id,$data);
         if ($result) {
-            successReturn();
+            jSuccess();
         }
-        errorReturn($result['msg']);
+        jError($result['msg']);
     }
 
     /**
@@ -99,8 +99,8 @@ class RoleController extends BaseController
 
         $result = RoleService::delRoleById($id);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 }

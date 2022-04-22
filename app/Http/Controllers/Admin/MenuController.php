@@ -28,7 +28,7 @@ class MenuController extends BaseController
             $val['status'] = $val['status'] == 1 ? true : false;
         }
 
-        successReturn($list);
+        jSuccess($list);
     }
 
     /**
@@ -39,7 +39,7 @@ class MenuController extends BaseController
         $data = Menu::getMenus([]);
         $result = getTree($data);
 
-        successReturn($result);
+        jSuccess($result);
     }
 
     /**
@@ -51,7 +51,7 @@ class MenuController extends BaseController
 
         $info = MenuService::getInfoById($id);
 
-        successReturn($info);
+        jSuccess($info);
     }
 
     /**
@@ -68,9 +68,9 @@ class MenuController extends BaseController
 
         $result = MenuService::addMenu($data);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -88,9 +88,9 @@ class MenuController extends BaseController
 
         $result = MenuService::editMenu($id,$data);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -103,9 +103,9 @@ class MenuController extends BaseController
 
         $result = Menu::editMenu($id,$data);
         if ($result) {
-            successReturn();
+            jSuccess();
         }
-        errorReturn($result['msg']);
+        jError($result['msg']);
     }
 
     /**
@@ -117,8 +117,8 @@ class MenuController extends BaseController
 
         $result = MenuService::delMenuById($id);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn();
+        jSuccess();
     }
 }

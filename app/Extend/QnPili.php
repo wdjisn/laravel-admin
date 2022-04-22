@@ -60,7 +60,7 @@ class QnPili
         }*/
 
         $data['push_url'] = RTMPPublishURL($rtmp, $hubName, $streamKey, 3600, $ak, $sk);
-        return successMsg($data);
+        return success($data);
     }
 
     /**
@@ -72,7 +72,7 @@ class QnPili
         $hub  = self::getHub();
         $resp = $hub->listLiveStreams($streamKey, 1, "");
 
-        return successMsg($resp);
+        return success($resp);
     }
 
     /**

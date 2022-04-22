@@ -27,15 +27,15 @@ class SeckillService
 
         $redis  = new Predis();
         $key    = 'SECKILL:GOODS:'.$info['id'];
-        $length = $redis->llen($key);
+        $length = $redis->llen($key);   // 获取列表的长度
         if ($length) {
-            return errorMsg('已经设置过秒杀库存，请勿重复设置');
+            return error('已经设置过秒杀库存，请勿重复设置');
         }
         for ($i = 0;$i <= $info['number']; $i++) {
             $redis->rpush($key, $i);
         }
 
-        return successMsg();
+        return success();
     }
 
     /**

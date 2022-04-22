@@ -42,9 +42,9 @@ class Oss
             $config = self::getConfig();
             $ossClient = new OssClient($config['key'], $config['secret'], $config['endpoint']);
             $ossClient->uploadFile($config['bucket'], $path, $file);
-            return successMsg(['url' => $config['gateway'].$path]);
+            return success(['url' => $config['gateway'].$path]);
         } catch (OssException $e) {
-            return errorMsg($e->getMessage());
+            return error($e->getMessage());
         }
     }
 
@@ -60,9 +60,9 @@ class Oss
             $config = self::getConfig();
             $ossClient = new OssClient($config['key'], $config['secret'], $config['endpoint']);
             $ossClient->putObject($config['bucket'], $path, $content);
-            return successMsg(['url' => $config['gateway'].$path]);
+            return success(['url' => $config['gateway'].$path]);
         } catch(OssException $e) {
-            return errorMsg($e->getMessage());
+            return error($e->getMessage());
         }
     }
 }

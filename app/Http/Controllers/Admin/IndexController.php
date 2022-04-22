@@ -11,12 +11,12 @@ namespace App\Http\Controllers\Admin;
 use App\Jobs\Snotify;
 use App\Extend\Predis;
 use App\Extend\Upload;
+use App\Rules\AdminRule;
 use App\Model\SmsNotify;
 use App\Extend\Phpoffice;
-use App\Rules\AdminRule;
-use App\Service\AdminService;
 use App\Service\RoleService;
 use App\Extend\ServerMonitor;
+use App\Service\AdminService;
 
 class IndexController extends BaseController
 {
@@ -28,11 +28,11 @@ class IndexController extends BaseController
     {
         $systemIns = new ServerMonitor();
 
-        $data['runTime'] = $systemIns->getUpTime();              # 获取运行时间
-        $data['memory']  = $systemIns->getMem(true);    # 获取内存信息
-        $data['cpu']     = $systemIns->getCPU();                # 获取CPU使用率
+        $data['runTime'] = $systemIns->getUpTime();            # 获取运行时间
+        $data['memory']  = $systemIns->getMem(true);   # 获取内存信息
+        $data['cpu']     = $systemIns->getCPU();               # 获取CPU使用率
 
-        successReturn($data);
+        jSuccess($data);
     }
 
     /**
@@ -43,7 +43,7 @@ class IndexController extends BaseController
         $key   = "ADMIN:UID:".$this->userId;
         $redis = new Predis();
         $redis->del($key);
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -58,16 +58,16 @@ class IndexController extends BaseController
         # 验证参数
         $adminRule = new AdminRule();
         if (!$adminRule->scene('change_password')->check($data)) {
-            errorReturn($adminRule->getError());
+            jError($adminRule->getError());
         }
 
         $id = $this->userId;
         $result = AdminService::changePassword($id,$data['old_password'],$data['password']);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
 
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -77,7 +77,7 @@ class IndexController extends BaseController
     {
         $permission = RoleService::getPermission($this->roleId,$this->isAdmin);
 
-        successReturn($permission);
+        jSuccess($permission);
     }
 
     /**
@@ -89,9 +89,9 @@ class IndexController extends BaseController
 
         $result = Upload::file($file);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn($result['data']);
+        jSuccess($result['data']);
     }
 
     /**
@@ -102,12 +102,12 @@ class IndexController extends BaseController
         $excel  = $this->requestFile['excel'];
         $result = Phpoffice::import($excel);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
 
         $data = Array();
         foreach ($result['data'] as $key=>$val) {
-            if ($key) {
+            if ($val[0]) {
                 $info = Array();
                 $info['value']      = $val[0];
                 $info['status']     = 0;
@@ -118,17 +118,17 @@ class IndexController extends BaseController
         }
         SmsNotify::insert($data);
 
-        SmsNotify::chunk(1000, function ($notifies) {
+        SmsNotify::where('status',0)->chunk(1000, function ($notifies) {
             # 待发送短信通知入队
             foreach ($notifies as $notify) {
-                $job = new Snotify($notify);
-                $job->delay(5);
-                $this->dispatch($job);
+                # dispatch 分发任务
+                # delay    延迟2秒分发
+                Snotify::dispatch($notify)->delay(now()->addSeconds(2));
             }
         });
-
         # php artisan queue:work   消费队列
+        # 正式环境下，需要使用 Supervisor 进程守护
 
-        successReturn();
+        jSuccess();
     }
 }

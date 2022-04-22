@@ -41,19 +41,19 @@ class BaseController extends Controller
         $str   = base64_decode($token);
         $arr   = json_decode($str,true);
         if (!$arr) {
-            errorReturn();
+            jError();
         }
         if ((time() - $arr['timestamp']) > 60) {
-            errorReturn();
+            jError();
         }
         $sign = md5('appname='.config('style.app.name').'&appsecret='.config('style.app.secret').'&timestamp='.$arr['timestamp']);
         if ($arr['sign'] != $sign) {
-            errorReturn();
+            jError();
         }
         $userToken = $arr['token'];
         $result = Token::checkToken($userToken);
         if (!$result) {
-            errorReturn();
+            jError();
         }
         $result = (array)$result;
         $userInfo = (array)$result['data'];
@@ -63,22 +63,22 @@ class BaseController extends Controller
         $redis = new Predis();
         $data  = $redis->get($key);
         if (!$data) {
-            errorReturn('登录失效，请重新登录',1001);
+            jError('登录失效，请重新登录',401);
         }
         $data = json_decode($data,true);
 
         # 单点登录
         if ($userToken != $data['token']) {
-            errorReturn('登录失效，请重新登录',1001);
+            jError('登录失效，请重新登录',401);
         }
 
         # 刷新有效期
-        $redis->expire($key,3600*4);
+        $redis->expire($key,3600);
 
         # 验证用户状态
         $admin = AdminService::getInfoById($userInfo['id']);
         if ($admin['status'] != 1 || $admin['role_status'] != 1) {
-            errorReturn('账号异常',1001);
+            jError('登录失效，请重新登录',401);
         }
 
         $this->userId   = $admin['id'];

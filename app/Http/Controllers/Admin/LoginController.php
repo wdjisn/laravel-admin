@@ -32,13 +32,13 @@ class LoginController extends Controller
         # 验证参数
         $adminRule = new AdminRule();
         if (!$adminRule->scene('login')->check(['username' => $username,'password' => $password])) {
-            errorReturn($adminRule->getError());
+            jError($adminRule->getError());
         }
 
         # 验证是否可以登录
         $result = AdminService::loginCheck($username,$password);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
         $info = $result['data'];
 
@@ -58,16 +58,16 @@ class LoginController extends Controller
         $data['token'] = $token;
         $data['timestamp'] = time();
         $data['appname'] = config('style.app.name');
-        $str = base64_encode(json_encode($data,JSON_UNESCAPED_UNICODE));
 
         # 统计未处理bug数量
         $errorCount = LogService::getErrorCount(['status' => 0]);
 
-        successReturn(['username' => $info['username'],'token' => $token,'error_count' => $errorCount]);
+        jSuccess(['username' => $info['username'],'token' => $token,'error_count' => $errorCount]);
     }
 
     /**
      * 获取七牛云token
+     * vue直接上传文件至七牛云使用
      */
     public function getQiniuToken()
     {

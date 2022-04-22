@@ -30,7 +30,7 @@ class Upload
         $postfix = strtolower($file->getClientOriginalExtension());
         if ($postfix && !in_array($postfix, self::$imagePostfix) && !in_array($postfix, self::$videoPostfix)) {
             // $str = implode(' | ',self::$imagePostfix);
-            return errorMsg('不支持此格式文件上传');
+            return error('不支持此格式文件上传');
         }
 
         # 验证大小
@@ -38,13 +38,13 @@ class Upload
         if (in_array($postfix, self::$imagePostfix)) {
             $type = 'image';
             if ($size > self::$imageSize) {
-                return errorMsg('图片大小不能大于' . self::$imageSize . 'M');
+                return error('图片大小不能大于' . self::$imageSize . 'M');
             }
         }
         if (in_array($postfix, self::$videoPostfix)) {
             $type = 'video';
             if ($size > self::$videoSize) {
-                return errorMsg('视频大小不能大于' . self::$imageSize . 'M');
+                return error('视频大小不能大于' . self::$imageSize . 'M');
             }
         }
 
@@ -58,9 +58,9 @@ class Upload
         $result = Qniu::uploadFile($realPath,$url);
         if ($result['status']) {
             $data = ['url' => $result['data']['url'], 'full_url' => config('style.oss.gateway') . $result['data']['url']];
-            return successMsg($data);
+            return success($data);
         }
-        return errorMsg($result['msg']);
+        return error($result['msg']);
 
 
         /*# 存储至阿里云OSS
@@ -68,9 +68,9 @@ class Upload
         $url = $type . '/' . date('Ymd') . '/' . $name;
         $result = Oss::fileUpload($realPath,$url);
         if (!$result['status']) {
-            return errorMsg($result['msg']);
+            return error($result['msg']);
         }
-        return successMsg($result['data']);*/
+        return success($result['data']);*/
 
         /*# 存储至storage文件夹
         $date   = date('Ymd');
@@ -79,9 +79,9 @@ class Upload
         if ($result) {
             $url  = '/' . $type . '/' .$date . '/' . $name;
             $data = ['url' => $url, 'full_url' => 'http://' . $_SERVER["HTTP_HOST"] . $url];
-            return successMsg($data);
+            return success($data);
         }
-        return errorMsg();*/
+        return error();*/
     }
 
     /**
@@ -98,26 +98,26 @@ class Upload
             $postfix = strtolower($match[2]);
             if ($postfix && !in_array($postfix, self::$imagePostfix)) {
                 $str = implode(' | ',self::$imagePostfix);
-                return errorMsg('只能上传 '. $str .' 格式的图片');
+                return error('只能上传 '. $str .' 格式的图片');
             }
 
             # 验证大小
             $size = strlen(file_get_contents($content)) / (1024 * 1024);
             if ($size > self::$imageSize) {
-                return errorMsg('图片大小不能大于' . self::$imageSize . 'M');
+                return error('图片大小不能大于' . self::$imageSize . 'M');
             }
 
 
-            # 存储到七牛云
+            /*# 存储到七牛云
             $name   = date('His') . rand(1000, 9999) . '.' . $postfix;
             $url    = 'image/' . date('Ymd') . '/' . $name;
             $image  = base64_decode(str_replace($match[1], '', $content));
             $result = Qniu::uploadContent($image,$url);
             if ($result['status']) {
                 $data = ['url' => $result['data']['url'], 'full_url' => config('style.oss.storage') . $result['data']['url']];
-                return successMsg($data);
+                return success($data);
             }
-            return errorMsg($result['msg']);
+            return error($result['msg']);*/
 
 
             /*# 存储至阿里云OSS
@@ -126,12 +126,12 @@ class Upload
             $image  = base64_decode(str_replace($match[1], '', $content));
             $result = Oss::contentUpload($image,$url);
             if (!$result['status']) {
-                return errorMsg($result['msg']);
+                return error($result['msg']);
             }
-            return successMsg($result['data']);*/
+            return success($result['data']);*/
 
 
-            /*# 存储至storage文件夹
+            # 存储至storage文件夹
             $name  = date('His') . rand(1000, 9999) . '.' . $postfix;
             $date  = date('Ymd');
             $path  = 'image/' . $date . '/' . $name;
@@ -142,11 +142,11 @@ class Upload
             if ($result) {
                 $url  = '/image/' . $date . '/' . $name;
                 $data = ['url' => $url, 'full_url' => 'http://' . $_SERVER["HTTP_HOST"] . $url];
-                return successMsg($data);
+                return success($data);
             }
-            return errorMsg();*/
+            return error();
         } else {
-            return errorMsg();
+            return error();
         }
     }
 }

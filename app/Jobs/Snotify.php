@@ -42,12 +42,21 @@ class Snotify implements ShouldQueue
     public function handle()
     {
         var_dump($this->notify['id']);
-
         sleep(2);
 
         # TODO::发送短信通知
 
         $this->notify->status = 1;
         $this->notify->update();
+    }
+
+    /**
+     * 任务失败
+     * @param Exception $exception
+     */
+    public function failed(Exception $exception)
+    {
+        // 发送邮件，通知管理员
+        // event(new NotifyAdmin($exception->getMessage()));
     }
 }

@@ -29,7 +29,7 @@ class LogController extends BaseController
         # 统计未处理bug数量
         $data['error_count'] = LogService::getErrorCount(['status' => 0]);
 
-        successReturn($data);
+        jSuccess($data);
     }
 
     /**
@@ -42,9 +42,9 @@ class LogController extends BaseController
 
         $result = ErrorLog::editError($id,$status);
         if (!$result) {
-            errorReturn();
+            jError();
         }
-        successReturn();
+        jSuccess();
     }
 
     /**
@@ -59,7 +59,7 @@ class LogController extends BaseController
 
         $data = LogService::getLoginLog($where,$perPage);
 
-        successReturn($data);
+        jSuccess($data);
     }
 
     /**
@@ -91,6 +91,6 @@ class LogController extends BaseController
             'per_page'     => $perPage,
             'total'        => $rows
         ];
-        successReturn($data);
+        jSuccess($data);
     }
 }

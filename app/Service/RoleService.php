@@ -85,16 +85,16 @@ class RoleService
     {
         # 验证参数
         if (!$name) {
-            return errorMsg('请输入角色名称');
+            return error('请输入角色名称');
         }
         if (!$menuIds) {
-            return errorMsg('请选择角色权限');
+            return error('请选择角色权限');
         }
 
         # 检测是否重名
         $info = Role::getInfo(['name' => $name]);
         if ($info) {
-            return errorMsg('此角色已存在，请勿重复添加');
+            return error('此角色已存在，请勿重复添加');
         }
 
         $menuIds = array_unique($menuIds);
@@ -117,9 +117,9 @@ class RoleService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return errorMsg('操作失败，请稍后重试');
+            return error('操作失败，请稍后重试');
         }
-        return successMsg();
+        return success();
     }
 
     /**
@@ -133,22 +133,22 @@ class RoleService
     public static function editRole($id,$name,$menuIds,$status)
     {
         if ($id <= 0) {
-            return errorMsg();
+            return error();
         }
         if (!$name) {
-            return errorMsg('请输入角色名称');
+            return error('请输入角色名称');
         }
         if (!$menuIds) {
-            return errorMsg('请选择角色权限');
+            return error('请选择角色权限');
         }
 
         # 获取被删除的角色信息
         $info = Role::getInfo(['id' => $id]);
         if (!$info) {
-            return errorMsg();
+            return error();
         }
         if ($info && $info['is_admin'] == 1) {
-            return errorMsg('无权修改超级管理员');
+            return error('无权修改超级管理员');
         }
 
         DB::beginTransaction();
@@ -172,9 +172,9 @@ class RoleService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return errorMsg('操作失败，请稍后重试');
+            return error('操作失败，请稍后重试');
         }
-        return successMsg();
+        return success();
     }
 
     /**
@@ -185,19 +185,19 @@ class RoleService
     public static function delRoleById($id)
     {
         if ($id <= 0) {
-            return errorMsg();
+            return error();
         }
 
         # 获取被删除的角色信息
         $info = Role::getInfo(['id' => $id]);
         if ($info && $info['is_admin'] == 1) {
-            return errorMsg('无权删除超级管理员');
+            return error('无权删除超级管理员');
         }
 
         # 验证使用该角色的管理员数量
         $adminCount = Admin::getCount(['role_id' => $id]);
         if ($adminCount) {
-            return errorMsg('有管理员使用此角色，无法删除');
+            return error('有管理员使用此角色，无法删除');
         }
 
         DB::beginTransaction();
@@ -207,8 +207,8 @@ class RoleService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return errorMsg('操作失败，请稍后重试');
+            return error('操作失败，请稍后重试');
         }
-        return successMsg();
+        return success();
     }
 }

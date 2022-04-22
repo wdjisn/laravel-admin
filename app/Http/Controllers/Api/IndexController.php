@@ -25,9 +25,9 @@ class IndexController
 
         $result = SmsService::sendCode($mobile, $ip);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn($result['data']);
+        jSuccess($result['data']);
     }
 
     /**
@@ -40,9 +40,9 @@ class IndexController
 
         $result = Upload::base64Image($file);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn($result['data']);
+        jSuccess($result['data']);
     }
 
     /**
@@ -52,9 +52,9 @@ class IndexController
     {
         $result = SeckillService::storage(1);
         if (!$result['status']) {
-            errorReturn($result['msg']);
+            jError($result['msg']);
         }
-        successReturn($result['data']);
+        jSuccess($result['data']);
     }
 
     /**
@@ -68,7 +68,7 @@ class IndexController
         # 访问用户入队
         $userList = SeckillService::userList($userId);
         if (!$userList) {
-            errorReturn('人数过多，请稍后重试');
+            jError('人数过多，请稍后重试');
         }
 
         # 验证是否已经抢购成功
@@ -76,14 +76,14 @@ class IndexController
         $successKey = 'SECKILL:SUCCESS:'.$goodsId;
         $successVal = $redis->hgetall($successKey);
         if (in_array($userId, $successVal)) {
-            errorReturn('你已经秒杀过了');
+            jError('你已经秒杀过了');
         }
 
         # 从队列中取出商品
         $goodsKey = 'SECKILL:GOODS:'.$goodsId;
         $goodsVal = $redis->lpop($goodsKey);
         if (!$goodsVal) {
-            errorReturn('很遗憾，商品抢光了');
+            jError('很遗憾，商品抢光了');
         }
         # 存储至hash值
         $redis->hset($successKey, $goodsVal, $userId);
@@ -91,7 +91,7 @@ class IndexController
         # 将用户从队列里面弹出,允许下一个用户进来
         $redis->rpop('SECKILL:USER');
 
-        successReturn('恭喜你，秒杀成功');
+        jSuccess('恭喜你，秒杀成功');
     }
 
     /**
@@ -105,7 +105,7 @@ class IndexController
         $key    = 'SECKILL:SUCCESS:'.$goodsId;
         $result = $redis->hgetall($key);
 
-        successReturn($result);
+        jSuccess($result);
     }
 
     /**
@@ -116,7 +116,7 @@ class IndexController
         $userId = rand(100, 1000);
         $result = QnPili::createStream($userId);
 
-        successReturn($result['data']);
+        jSuccess($result['data']);
     }
 
     /**
@@ -139,6 +139,6 @@ class IndexController
             }
         }
 
-        successReturn($list);
+        jSuccess($list);
     }
 }

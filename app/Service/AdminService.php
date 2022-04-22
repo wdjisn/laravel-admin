@@ -37,42 +37,42 @@ class AdminService
     public static function loginCheck($username, $password)
     {
         if (empty($username) || empty($password)) {
-            return errorMsg();
+            return error();
         }
 
         # 获取管理员信息
         $where = ['username' => $username];
         $info  = Admin::getInfo($where);
         if (!$info) {
-            return errorMsg('账号或密码错误');
+            return error('账号或密码错误');
         }
 
         # 验证密码
         $encrypt = md5($password . $info['safe']);
         if ($encrypt != $info['password']) {
-            return errorMsg('账号或密码错误');
+            return error('账号或密码错误');
         }
 
         # 验证管理员状态
         if ($info['status'] != 1) {
-            return errorMsg('账号异常');
+            return error('账号异常');
         }
 
         # 验证角色状态
         if ($info['role_status'] != 1) {
-            return errorMsg('账号异常');
+            return error('账号异常');
         }
 
         # 获取用户拥有权限
         $permission = RoleService::getPermission($info['role_id'],$info['is_admin']);
         if (!count($permission['list'])) {
-            return errorMsg('暂无权限');
+            return error('暂无权限');
         }
 
         unset($info['password']);
         unset($info['safe']);
 
-        return successMsg($info);
+        return success($info);
     }
 
     /**
@@ -105,7 +105,7 @@ class AdminService
         # 检测是否重名
         $info = Admin::getInfo(['username' => $username]);
         if ($info) {
-            return errorMsg('此管理员已存在，请勿重复添加');
+            return error('此管理员已存在，请勿重复添加');
         }
 
         $admin['username'] = $username;
@@ -118,9 +118,9 @@ class AdminService
 
         $adminId = Admin::addAdmin($admin);
         if ($adminId) {
-            return successMsg(['id' => $adminId]);
+            return success(['id' => $adminId]);
         }
-        return errorMsg('操作失败');
+        return error('操作失败');
     }
 
     /**
@@ -136,19 +136,19 @@ class AdminService
         # 验证管理员
         $info = Admin::getInfo(['id' => $id]);
         if (!$info) {
-            return errorMsg();
+            return error();
         }
         if ($info['is_admin'] == 1) {
-            return errorMsg('无权修改超级管理员');
+            return error('无权修改超级管理员');
         }
 
         # 验证角色
         $role = Role::getInfo(['id' => $roleId]);
         if (!$role) {
-            return errorMsg();
+            return error();
         }
         if ($role['is_admin'] == 1) {
-            return errorMsg('无权将角色设置为超级管理员');
+            return error('无权将角色设置为超级管理员');
         }
 
         if ($password) {
@@ -160,9 +160,9 @@ class AdminService
 
         $result = Admin::editAdmin($id,$admin);
         if ($result) {
-            return successMsg();
+            return success();
         }
-        return errorMsg('操作失败');
+        return error('操作失败');
     }
 
     /**
@@ -176,14 +176,14 @@ class AdminService
         # 获取被删除的管理员信息
         $info = Admin::getInfo(['id' => $id]);
         if ($info && $info['is_admin'] == 1) {
-            return errorMsg('无权删除超级管理员');
+            return error('无权删除超级管理员');
         }
 
         $res = Admin::delAdmin($id);
         if ($res) {
-            return successMsg();
+            return success();
         }
-        return errorMsg('删除失败，请稍后重试');
+        return error('删除失败，请稍后重试');
     }
 
     /**
@@ -198,11 +198,11 @@ class AdminService
         # 验证原始密码
         $info = Admin::getInfo(['id' => $id]);
         if (!$info) {
-            return errorMsg();
+            return error();
         }
         $encrypt = md5($oldPassword . $info['safe']);
         if ($encrypt != $info['password']) {
-            return errorMsg('旧密码错误');
+            return error('旧密码错误');
         }
 
         $safe = randString();
@@ -210,8 +210,8 @@ class AdminService
         $admin['password'] = md5($password . $safe);
         $result = Admin::editAdmin($id,$admin);
         if ($result) {
-            return successMsg();
+            return success();
         }
-        return errorMsg('修改失败，请稍后重试');
+        return error('修改失败，请稍后重试');
     }
 }

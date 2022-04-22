@@ -39,6 +39,11 @@ class Controller extends BaseController
      */
     function getDdoc()
     {
-        Ddoc::getDdoc();
+        # 只在测试环境下使用
+        if (!config('style.app.environment')) {
+            Ddoc::getDdoc();
+        } else {
+            abort(404);
+        }
     }
 }
