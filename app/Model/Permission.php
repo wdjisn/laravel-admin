@@ -26,6 +26,7 @@ class Permission extends BaseModel
                 ->leftjoin('menu as m','p.menu_id','=','m.id')
                 ->where($where)
                 ->select($field)
+                ->orderBy('m.id')
                 ->orderBy('m.sort')
                 ->get()
                 ->toArray();

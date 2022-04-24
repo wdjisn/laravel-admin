@@ -81,10 +81,15 @@ class AdminInitialize extends Command
                 ['name' => '登录日志','alias' => 'loginLog','icon' => ''],
                 ['name' => '访问日志','alias' => 'requestLog','icon' => '']
             ];
+            $component = [
+                ['name' => '文件上传','alias' => 'upload','icon' => ''],
+                ['name' => '复制粘贴','alias' => 'clipboard','icon' => '']
+            ];
             $menu = [
                 ['name' => '系统首页','alias' => 'dashboard','icon' => 'el-icon-lx-home','children' => []],
                 ['name' => '权限管理','alias' => 'permission','icon' => 'el-icon-setting','children' => $permission],
-                ['name' => '日志管理','alias' => 'log','icon' => 'el-icon-document-remove','children' => $log]
+                ['name' => '日志管理','alias' => 'log','icon' => 'el-icon-document-remove','children' => $log],
+                ['name' => '组件管理','alias' => 'component','icon' => 'el-icon-menu','children' => $component]
             ];
             foreach ($menu as $val) {
                 $data['parent_id'] = 0;
