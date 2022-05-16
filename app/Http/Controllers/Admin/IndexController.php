@@ -10,13 +10,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Jobs\Snotify;
 use App\Extend\Predis;
-use App\Extend\Upload;
 use App\Rules\AdminRule;
 use App\Model\SmsNotify;
 use App\Extend\Phpoffice;
 use App\Service\RoleService;
 use App\Extend\ServerMonitor;
 use App\Service\AdminService;
+use App\Service\UploadService;
 
 class IndexController extends BaseController
 {
@@ -87,7 +87,7 @@ class IndexController extends BaseController
     {
         $file = $this->requestFile['file'];
 
-        $result = Upload::file($file);
+        $result = UploadService::file($file);
         if (!$result['status']) {
             jError($result['msg']);
         }
